@@ -24,6 +24,7 @@ public class NotificationService extends Service {
         // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
     }
+
     @Override
     public void onCreate() {
 

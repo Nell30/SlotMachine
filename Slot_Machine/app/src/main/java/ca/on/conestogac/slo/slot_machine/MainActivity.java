@@ -20,6 +20,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    public void onClickAddToken(View button){
+        Intent i = new Intent(this, TokenActivity.class);
+        startActivity(i);
+    }
+
     protected void onDestroy(){
         startService(new Intent(getApplicationContext(),NotificationService.class));
         super.onDestroy();

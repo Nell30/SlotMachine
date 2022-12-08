@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class GameActivity extends AppCompatActivity {
-    private TextView cash;
+    private TextView cash, token;
     private ImageView symbol1, symbol2, symbol3;
     private ImageButton spinButton;
     private AnimationDrawable animation1, animation2, animation3;
@@ -32,6 +33,11 @@ public class GameActivity extends AppCompatActivity {
     private ImageView winnerImage;
     private SlotMachine database;
     private SharedPref pref;
+    private Integer startToken;
+    private MediaPlayer winSound;
+    private int playerTokens;
+    private MediaPlayer rattleSound;
+    private MediaPlayer loseSound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +65,20 @@ public class GameActivity extends AppCompatActivity {
         animation3 = (AnimationDrawable) animation3Image.getBackground();
         database = ((SlotMachine) getApplication());
         pref = new SharedPref(this);
-    }
+        token = findViewById(R.id.playerTokenText);
 
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        startToken = extras.getInt("playerTokens");
+
+        slotMachine.setPlayerTokens(startToken);
+        Integer playerToken = slotMachine.checkPlayerTokens();
+
+        token.setText(playerToken.toString());
+        winSound = MediaPlayer.create(getApplicationContext(), R.raw.winsound);
+        rattleSound = MediaPlayer.create(getApplicationContext(), R.raw.rattle);
+        loseSound = MediaPlayer.create(getApplicationContext(), R.raw.lose);
+    }
     //option menu at the top
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -91,16 +109,20 @@ public class GameActivity extends AppCompatActivity {
 
     //clicking the spin button
     public void onSpinButtonClicked(View button){
-        spin();
-        startSlotAnimations();
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable(){
-            public void run(){
-                clearSlotAnimations();
-            }
-        }, 1300);
-        //add to database
-        database.addStatus();
+        if(checkPlayerBust()){
+            gameOver();
+        }else {
+            spin();
+            startSlotAnimations();
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    clearSlotAnimations();
+                }
+            }, 1300);
+            //add to database
+            database.addStatus();
+        }
     }
 
     public ArrayList<Symbols> spin(){
@@ -109,12 +131,15 @@ public class GameActivity extends AppCompatActivity {
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
+                updatePlayerToken();
                 user_won = 0;
                 updateCurrentLine(newLine);
                 //if the user won run the win() function
                 if (slotMachine.checkWin(newLine)) {
                     win();
                      user_won = 100;
+                }else {
+                    loseSound.start();
                 }
                 //set static status to 100 or 0 after every game
                 user_status = user_won;
@@ -136,11 +161,11 @@ public class GameActivity extends AppCompatActivity {
         //show the winner image
         winnerImage.setVisibility(View.VISIBLE);
         spinButton.setVisibility(View.INVISIBLE);
-
+        winSound.start();
         //add 100$ when the user win
         cash_won = cash_won + 100;
         cash.setText(Integer.toString(cash_won));
-
+        updatePlayerToken();
         if(pref.getBoolean("save_game")){
             int cash = pref.getInt("cash_won");
             cash += 100;
@@ -152,9 +177,29 @@ public class GameActivity extends AppCompatActivity {
             public void run() {
                 winnerImage.setVisibility(View.INVISIBLE);
                 spinButton.setVisibility(View.VISIBLE);
+                slotMachine.plusPlayerTokens(+3);
+                updatePlayerToken();
             }
         }, 2000);
         scash_won = cash_won;
+    }
+    public void plusPlayerTokens(int amount){
+        this.playerTokens += amount;
+    }
+
+    public void updatePlayerToken(){
+        Integer newPlayerTokens = slotMachine.checkPlayerTokens();
+        token.setText(newPlayerTokens.toString());
+    }
+
+    public boolean checkPlayerBust(){
+        int token = slotMachine.checkPlayerTokens();
+        return token <= 0;
+    }
+
+    public void gameOver(){
+            Intent i = new Intent(this, GameOverActivity.class);
+            startActivity(i);
     }
 
     //randomize the symbol images
@@ -172,6 +217,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void startSlotAnimations(){
+        rattleSound.start();
         startAnimation1();
         startAnimation2();
         startAnimation3();

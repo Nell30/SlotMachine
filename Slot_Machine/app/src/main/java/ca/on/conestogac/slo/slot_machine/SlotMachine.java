@@ -14,7 +14,7 @@ public class SlotMachine extends Application {
     public SQLiteOpenHelper helper;
     private int numberOfWheels;
     private ArrayList<Wheel> slots;
-    private int playerFunds;
+    private int playerTokens;
 
     //oncreate function
     @Override
@@ -40,7 +40,6 @@ public class SlotMachine extends Application {
     public SlotMachine(int numberOfWheels) {
         this.numberOfWheels = numberOfWheels;
         this.slots = new ArrayList<>();
-        this.playerFunds = 0;
         generateWheels();
     }
 
@@ -76,7 +75,7 @@ public class SlotMachine extends Application {
         }
     }
     public ArrayList<Symbols> spin(){
-
+        minusPlayerTokens(-1);
         ArrayList<Symbols> line = new ArrayList<>();
         for(Wheel wheel : slots){
             line.add(wheel.spin());
@@ -108,5 +107,16 @@ public class SlotMachine extends Application {
             }
         }
         return counter == line.size();
+    }
+
+    public void setPlayerTokens(int amount) {
+        this.playerTokens = amount;
+    }
+    public int checkPlayerTokens() {return playerTokens;}
+    public void minusPlayerTokens(int amount){
+        this.playerTokens += amount;
+    }
+    public void plusPlayerTokens(int amount){
+        this.playerTokens += amount;
     }
 }

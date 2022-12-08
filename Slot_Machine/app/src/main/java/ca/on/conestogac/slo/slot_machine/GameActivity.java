@@ -31,6 +31,7 @@ public class GameActivity extends AppCompatActivity {
     private SlotMachine slotMachine;
     private ImageView winnerImage;
     private SlotMachine database;
+    private SharedPref pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,7 @@ public class GameActivity extends AppCompatActivity {
         animation3Image.setBackgroundResource(R.drawable.wheel3animation);
         animation3 = (AnimationDrawable) animation3Image.getBackground();
         database = ((SlotMachine) getApplication());
+        pref = new SharedPref(this);
     }
 
     //option menu at the top
@@ -138,6 +140,12 @@ public class GameActivity extends AppCompatActivity {
         //add 100$ when the user win
         cash_won = cash_won + 100;
         cash.setText(Integer.toString(cash_won));
+
+        if(pref.getBoolean("save_game")){
+            int cash = pref.getInt("cash_won");
+            cash += 100;
+            pref.setInt("cash_won", cash);
+        }
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {

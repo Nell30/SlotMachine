@@ -20,5 +20,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    protected void onDestroy(){
+        startService(new Intent(getApplicationContext(),NotificationService.class));
+        super.onDestroy();
+    }
 
 }

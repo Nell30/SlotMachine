@@ -1,6 +1,7 @@
 package ca.on.conestogac.slo.slot_machine;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -78,6 +79,11 @@ public class GameActivity extends AppCompatActivity {
         winSound = MediaPlayer.create(getApplicationContext(), R.raw.winsound);
         rattleSound = MediaPlayer.create(getApplicationContext(), R.raw.rattle);
         loseSound = MediaPlayer.create(getApplicationContext(), R.raw.lose);
+        //back button
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
     //option menu at the top
     @Override
@@ -99,6 +105,9 @@ public class GameActivity extends AppCompatActivity {
             case R.id.statistics:
                 //statistics item
                 startActivity(new Intent(getApplicationContext(), StatsActivity.class));
+                break;
+            case android.R.id.home:
+                super.onBackPressed();
                 break;
             default:
                 ret = super.onOptionsItemSelected(item);

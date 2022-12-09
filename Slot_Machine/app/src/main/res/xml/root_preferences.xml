@@ -4,12 +4,15 @@
     <PreferenceCategory app:title="Settings">
 
         <SwitchPreferenceCompat
+            android:id="@+id/dark_theme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="false"
+            app:key="dark_theme"
+            app:title="Dark Theme" />
+        <SwitchPreferenceCompat
             app:key="sync"
             app:title="@string/save_title" />
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="switch_preference_1"
-            android:title="Dark Theme" />
 
     </PreferenceCategory>
 

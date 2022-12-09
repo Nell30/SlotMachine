@@ -4,22 +4,35 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout dl;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
-
+    private SharedPreferences sharedPref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        //get the shared preferences
+        if((sharedPref.getBoolean("dark_theme", false)) == false){
+            setTheme(R.style.Theme_Slot_Machine);
+        }
+        else{
+            setTheme(R.style.Theme_dark);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().setTitle("Slot Machine Game");
@@ -51,6 +64,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();*/
+                startActivity(new Intent(getApplicationContext(), InstructionActivity.class));
+            }
+        });
+
     }
 
     @Override
@@ -67,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+
+
     public void onClickAddToken(View button){
         Intent i = new Intent(this, TokenActivity.class);
         startActivity(i);
@@ -77,4 +102,17 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    @Override
+    protected void onResume() {
+        PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        //get the shared preferences
+        if((sharedPref.getBoolean("dark_theme", false)) == false){
+            setTheme(R.style.Theme_Slot_Machine);
+        }
+        else{
+            setTheme(R.style.Theme_dark);
+        }
+        super.onResume();
+    }
 }

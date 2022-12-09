@@ -36,4 +36,20 @@
     <!-- Action Menu Bar Strings -->
     <string name="Open">Open</string>
     <string name="Close">Close</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="instructions">
+        In the beginning, the player gets
+        to choose either 5 or 10 tokens.
+    </string>
+    <string name="instructions2">
+        Tokens are required to play this game.
+        Once the tokens run out, the game is over.
+    </string>
+    <string name="instructions3">
+        Every spin costs one token.
+    </string>
+    <string name="instructions4">
+        You win 100$ for matching all
+        three symbols and get three extra tokens.
+    </string>
 </resources>

@@ -3,7 +3,9 @@ package ca.on.conestogac.slo.slot_machine;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -16,12 +18,24 @@ public class StatsActivity extends AppCompatActivity {
     private TextView totalCash;
     private  TextView currentCash;
     private TextView reset;
+    private SharedPreferences sharedPref;
     GameActivity gameActivity = new GameActivity();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SlotMachine slotMachine = (SlotMachine) getApplication();
+        //shared preferences
+        PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        //get the shared preferences
+        if((sharedPref.getBoolean("dark_theme", false)) == false){
+            setTheme(R.style.Theme_Slot_Machine);
+        }
+        else{
+            setTheme(R.style.Theme_dark);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats2);
+        //set title
         getSupportActionBar().setTitle("Statistics");
 
       //write to statistics

@@ -1,5 +1,6 @@
 package ca.on.conestogac.slo.slot_machine;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -7,11 +8,21 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 
 public class SettingsActivity extends AppCompatActivity {
-
+    private SharedPreferences sharedPref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        //get the shared preferences
+        if((sharedPref.getBoolean("dark_theme", false)) == false){
+            setTheme(R.style.Theme_Slot_Machine);
+        }
+        else{
+            setTheme(R.style.Theme_dark);
+        }
         super.onCreate(savedInstanceState);
         getSupportActionBar().setTitle("Settings");
         setContentView(R.layout.settings_activity);

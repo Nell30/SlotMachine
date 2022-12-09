@@ -107,6 +107,7 @@ public class SlotMachine extends Application {
             }
         }
         return counter == line.size();
+
     }
 
     public void setPlayerTokens(int amount) {

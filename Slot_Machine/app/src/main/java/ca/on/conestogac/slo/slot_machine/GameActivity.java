@@ -2,6 +2,7 @@ package ca.on.conestogac.slo.slot_machine;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
@@ -70,7 +71,6 @@ public class GameActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         startToken = extras.getInt("playerTokens");
-
         slotMachine.setPlayerTokens(startToken);
         Integer playerToken = slotMachine.checkPlayerTokens();
 
